@@ -4,6 +4,7 @@ package ru.kata.spring.boot_security.demo.models;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.Set;
 
 @Entity
@@ -12,29 +13,26 @@ public class Role implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private long id;
     @Column(name = "name", unique = true)
+    @Size(min = 2, message = "Минимальное название роли должно содержать от 2 символов")
     private String name;
-    @Column(name = "users")
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinTable(name = "user_role",
-            joinColumns = @JoinColumn (name = "roles_id"),
-            inverseJoinColumns = @JoinColumn(name = "users_id"))
+
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private Set<User> users;
 
     public Role() {
     }
 
-    public Role(int id, String name) {
-        this.id = id;
+    public Role(String name) {
         this.name = name;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

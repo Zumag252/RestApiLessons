@@ -3,6 +3,7 @@ package ru.kata.spring.boot_security.demo.models;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.Set;
 
@@ -15,19 +16,21 @@ public class User implements UserDetails {
     private long id;
 
     @Column(name = "username", unique = true)
+    @Size(min = 2, message = "Минимальное значение username от 2 символов")
     private String username;
 
     @Column(name = "age")
     private int age;
 
     @Column(name = "email")
+    @Size(min = 5, message = "Минимальное название почты должно начинаться от 5 символов")
     private String email;
 
     @Column(name = "password")
     private String password;
 
-    @Column(name = "role")
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
+
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn (name = "users_id"),
             inverseJoinColumns = @JoinColumn(name = "roles_id"))
@@ -37,12 +40,12 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(long id, String username, int age, String email, String password) {
-        this.id = id;
+    public User(String username, int age, String email, String password, Set<Role> roles) {
         this.username = username;
         this.age = age;
         this.email = email;
         this.password = password;
+        this.roles = roles;
     }
 
     public long getId() {
