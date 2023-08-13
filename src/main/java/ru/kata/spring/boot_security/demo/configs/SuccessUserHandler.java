@@ -1,6 +1,6 @@
 package ru.kata.spring.boot_security.demo.configs;
 
-import org.springframework.context.annotation.Bean;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -22,9 +22,6 @@ public class SuccessUserHandler implements AuthenticationSuccessHandler {
         }
         else if (roles.contains("ROLE_ADMIN")) {
             httpServletResponse.sendRedirect("/admin");
-        }
-        else {
-            httpServletResponse.sendRedirect("/login");
         }
     }
 }
