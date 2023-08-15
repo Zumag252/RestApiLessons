@@ -58,5 +58,12 @@ public class UserServiceImpl implements UserService  {
         Optional<User> user = repository.findById(id);
         return user.orElse(null);
     }
+    @Override
+    public User findByUsername(String username) {
+       if(repository.findByUsername(username).getAuthorities().isEmpty()) {
+           throw new UsernameNotFoundException("Пользователь с таким именем не найден");
+       }
+       return repository.findByUsername(username);
+    }
 
 }

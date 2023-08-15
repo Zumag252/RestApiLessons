@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>User</title>
+</head>
+<body>
+<h3>Страница пользователя</h3>
+<label>ID:</label> <p th:text="${user.getId()}">ID</p>
+<label>Возраст:</label> <p th:text="${user.getAge()}">Age</p>
+<label>Имя пользователя:</label> <p th:text="${user.getUsername()}">Name</p>
+<label>Электронная почта:</label> <p th:text="${user.getEmail()}">Email</p>
+
+<div>
+    <label>Роли:
+        <input type="checkbox" name="roles"
+               th:each="role: ${roles}"
+               th:text="${role.getName()}"
+               th:value="${role.getId()}"
+               th:field="*{roles}"/>
+    </label>
+</div>
+
+<form th:method="POST" th:action="@{/logout}">
+    <input type="submit" value="Logout"/>
+</form>
+
+</body>
+</html>

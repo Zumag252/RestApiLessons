@@ -4,8 +4,9 @@
     <title>Admin page</title>
 </head>
 <body>
-<h1>Welcome to admin page</h1>
+<h1>Страница админа</h1>
 
+<a th:href="@{/admin/users}">ALL USERS</a>
 
 <form th:method="POST" th:action="@{/logout}">
     <input type="submit" value="Logout"/>
