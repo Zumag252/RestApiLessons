@@ -13,13 +13,14 @@
 <label>Пароль:</label> <p th:text="${user.getPassword()}">Email</p>
 <label>Электронная почта:</label> <p th:text="${user.getEmail()}">Email</p>
 
-<form th:method="DELETE" th:action="@{/users/{id} (id = ${user.getId()})}">
-    <input type = "submit" value = "Delete user"/>
+
+<a th:href="@{/admin/users/{id}/edit(id=${user.getId()})}">
+    <input type="button" value="Edit">
+</a>
+<form th:method="DELETE" th:action="@{/admin/users/{id}(id=${user.getId()})}">
+    <input type="submit" value="Delete">
 </form>
-<form th:method="PATCH" th:action="@{/users/{id} (id = ${user.getId()})}">
-    <input type = "submit" value = "Update user"/>
-</form>
-<a th:href="@{/users/{id}/update (id = ${user.getId()})}">Update</a>
+<br><br>
 
 <form th:method="POST" th:action="@{/logout}">
     <input type="submit" value="Logout"/>

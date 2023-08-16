@@ -4,22 +4,23 @@ package ru.kata.spring.boot_security.demo.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.models.User;
+import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
     private final UserService userService;
+    private final RoleService roleService;
     @Autowired
-    public AdminController(UserService userService) {
+    public AdminController(UserService userService, RoleService roleService) {
         this.userService = userService;
-    }
-
-    @GetMapping("/adminPage")
-    public String getAdminPage() {
-        return "admin/adminPage";
+        this.roleService = roleService;
     }
 
     @GetMapping("/users")
@@ -35,15 +36,41 @@ public class AdminController {
     }
 
     @GetMapping("/new")
-    public String newUser(Model model, User user) {
+    public String newUser(Model model) {
         model.addAttribute("user", new User());
+        model.addAttribute("roles", roleService.getRoles());
         return "admin/new";
     }
 
-    @PostMapping("/new")
-    public String createUser(@ModelAttribute("user") User user) {
+    @PostMapping
+    public String createUser(@ModelAttribute("user") @Valid User user, BindingResult result) {
+        if (result.hasErrors()) {
+            return "admin/new";
+        }
         userService.save(user);
         return "redirect:admin/users";
     }
+    @DeleteMapping("/users/{id}")
+    public String deleteUser(@PathVariable("id") long id) {
+        userService.delete(id);
+        return "redirect:/admin/users";
+    }
 
+    @GetMapping("users/{id}/edit")
+    public String getUpdateEventPage(Model model, @PathVariable("id") long id) {
+        model.addAttribute("user", userService.findOne(id));
+        model.addAttribute("roles", roleService.getRoles());
+        return "/admin/edit";
+    }
+
+    @PatchMapping("users/{id}")
+    public String updateEvent(@ModelAttribute("user") @Valid User user,
+                              @PathVariable("id") long id,
+                              BindingResult result) {
+        if (result.hasErrors()) {
+            return "/admin/edit";
+        }
+        userService.update(id, user);
+        return "redirect:/admin/users";
+    }
 }
