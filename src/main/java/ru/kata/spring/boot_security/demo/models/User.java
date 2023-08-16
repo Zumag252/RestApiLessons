@@ -3,7 +3,7 @@ package ru.kata.spring.boot_security.demo.models;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.Collection;
 import java.util.Set;
 
@@ -17,9 +17,13 @@ public class User implements UserDetails {
 
     @Column(name = "username", unique = true)
     @Size(min = 2, message = "Минимальное значение username от 2 символов")
+    @NotEmpty(message = "Username не должен быть пустым")
     private String username;
 
     @Column(name = "age")
+    @NotNull
+    @Min(value = 1, message = "Возраст должен быть больше нуля")
+    @Max(value = 120, message = "Возраст не может быть больше 120")
     private int age;
 
     @Column(name = "email")
@@ -27,6 +31,7 @@ public class User implements UserDetails {
     private String email;
 
     @Column(name = "password")
+    @NotEmpty(message = "Пароль не должен быть пустым")
     private String password;
 
 
