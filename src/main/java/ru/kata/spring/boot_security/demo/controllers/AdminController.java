@@ -24,13 +24,13 @@ public class AdminController {
 
     @GetMapping("/users")
     public String getUsers(Model model) {
-        model.addAttribute("users", userService.findAll());
+        model.addAttribute("users", userService.showAllUsers());
         return "admin/users";
     }
 
     @GetMapping("/users/{id}")
     public String getUserById(@PathVariable("id") long id, Model model) {
-        model.addAttribute("user", userService.findOne(id));
+        model.addAttribute("user", userService.getUserById(id));
         return "admin/userPage";
     }
 
@@ -46,18 +46,18 @@ public class AdminController {
         if (result.hasErrors()) {
             return "admin/new";
         }
-        userService.save(user);
+        userService.addUser(user);
         return "redirect:admin/users";
     }
     @DeleteMapping("/users/{id}")
     public String deleteUser(@PathVariable("id") long id) {
-        userService.delete(id);
+        userService.deleteUser(id);
         return "redirect:/admin/users";
     }
 
     @GetMapping("users/{id}/edit")
     public String getUpdateEventPage(Model model, @PathVariable("id") long id) {
-        model.addAttribute("user", userService.findOne(id));
+        model.addAttribute("user", userService.getUserById(id));
         model.addAttribute("roles", roleService.getRoles());
         return "/admin/edit";
     }
@@ -69,7 +69,7 @@ public class AdminController {
         if (result.hasErrors()) {
             return "/admin/edit";
         }
-        userService.update(id, user);
+        userService.editUser(id, user);
         return "redirect:/admin/users";
     }
 }

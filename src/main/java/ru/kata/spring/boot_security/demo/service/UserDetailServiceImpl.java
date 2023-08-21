@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Service
 public class UserDetailServiceImpl implements UserDetailsService {
     private final UserDao userDao;
-    @Autowired
+
     public UserDetailServiceImpl(UserDao userDao) {
         this.userDao = userDao;
     }
