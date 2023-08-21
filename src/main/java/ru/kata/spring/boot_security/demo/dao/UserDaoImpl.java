@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import ru.kata.spring.boot_security.demo.models.User;
-import ru.kata.spring.boot_security.demo.repository.UserRepository;
+
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -17,13 +17,12 @@ public class UserDaoImpl implements UserDao {
     @PersistenceContext
     private final EntityManager entityManager;
     private final PasswordEncoder passwordEncoder;
-    private final UserRepository repository;
+
 
     @Autowired
-    public UserDaoImpl(EntityManager entityManager, PasswordEncoder passwordEncoder, UserRepository repository) {
+    public UserDaoImpl(EntityManager entityManager, PasswordEncoder passwordEncoder) {
         this.entityManager = entityManager;
         this.passwordEncoder = passwordEncoder;
-        this.repository = repository;
     }
 
     @Override
@@ -60,7 +59,11 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User findByUsername(String username) {
-        return repository.findByUsername(username);
+        return entityManager.createQuery
+                        ("SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.username=:username", User.class)
+                .setParameter("username", username)
+                .getResultList()
+                .stream().findFirst().orElse(null);
     }
 }
 
