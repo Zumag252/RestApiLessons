@@ -11,6 +11,7 @@ import ru.kata.spring.boot_security.demo.service.RoleServiceImpl;
 import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
 import javax.validation.Valid;
 
+
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
@@ -24,7 +25,7 @@ public class AdminController {
 
     @GetMapping("/users")
     public String getUsers(Model model) {
-        model.addAttribute("users", userService.showAllUsers());
+        model.addAttribute("users", userService.getAllUsers());
         return "admin/users";
     }
 
@@ -46,7 +47,7 @@ public class AdminController {
         if (result.hasErrors()) {
             return "admin/new";
         }
-        userService.addUser(user);
+        userService.saveUser(user);
         return "redirect:admin/users";
     }
     @DeleteMapping("/users/{id}")
@@ -69,7 +70,7 @@ public class AdminController {
         if (result.hasErrors()) {
             return "/admin/edit";
         }
-        userService.editUser(id, user);
+        userService.updateUser(id, user);
         return "redirect:/admin/users";
     }
 }

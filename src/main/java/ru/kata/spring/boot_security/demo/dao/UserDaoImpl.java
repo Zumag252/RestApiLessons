@@ -7,6 +7,7 @@ import ru.kata.spring.boot_security.demo.models.User;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -15,12 +16,11 @@ import java.util.List;
 public class UserDaoImpl implements UserDao {
     @PersistenceContext
     private final EntityManager entityManager;
-    private final RoleDao roleDao;
+
 
     @Autowired
-    public UserDaoImpl(EntityManager entityManager, RoleDao roleDao) {
+    public UserDaoImpl(EntityManager entityManager) {
         this.entityManager = entityManager;
-        this.roleDao = roleDao;
     }
 
     @Override
@@ -30,17 +30,6 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void save(User user) {
-        var roles = user.getRoles();
-        var roleList = roleDao.getRoles();
-        var list = new ArrayList<Role>();
-        for (Role role : roleList) {
-            for (Role userRole : roles) {
-                if (role.getName().equals(userRole.getName())) {
-                    list.add(role);
-                }
-            }
-        }
-        user.setRoles(list);
         entityManager.persist(user);
     }
 
