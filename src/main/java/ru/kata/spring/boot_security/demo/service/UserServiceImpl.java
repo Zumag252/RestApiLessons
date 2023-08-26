@@ -9,6 +9,7 @@ import ru.kata.spring.boot_security.demo.dao.UserDao;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -68,9 +69,9 @@ public class UserServiceImpl implements UserService {
         userDao.save(settingRoles(user));
     }
     private User settingRoles(User user) {
-        var roles = user.getRoles();
-        var roleList = roleService.getRoles();
-        var list = new ArrayList<Role>();
+        List<Role> roles = user.getRoles();
+        Collection<Role> roleList = roleService.getRoles();
+        List<Role> list = new ArrayList<>();
         for (Role role : roleList) {
             for (Role userRole : roles) {
                 if (role.getRole_name().equals(userRole.getRole_name())) {
