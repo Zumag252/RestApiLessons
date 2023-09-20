@@ -10,6 +10,7 @@ import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.service.RoleServiceImpl;
 import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
 import javax.validation.Valid;
+import java.security.Principal;
 
 
 @Controller
@@ -24,21 +25,30 @@ public class AdminController {
     }
 
     @GetMapping("/users")
-    public String getUsers(Model model) {
+    public String getUsers(Model model, Principal principal) {
+        User user = userService.getUserByUsername(principal.getName());
+        model.addAttribute("user", user);
+        model.addAttribute("roles", user.getRoles());
         model.addAttribute("users", userService.getAllUsers());
+        model.addAttribute("AllRoles", roleService.getRoles());
         return "admin/users";
     }
 
-    @GetMapping("/users/{id}")
-    public String getUserById(@PathVariable("id") long id, Model model) {
-        model.addAttribute("user", userService.getUserById(id));
+    @GetMapping("/userPage")
+    public String getUserById(Model model, Principal principal) {
+        User user = userService.getUserByUsername(principal.getName());
+        model.addAttribute("user", user);
+        model.addAttribute("roles", user.getRoles());
         return "admin/userPage";
     }
 
     @GetMapping("/new")
-    public String newUser(Model model) {
-        model.addAttribute("user", new User());
-        model.addAttribute("roles", roleService.getRoles());
+    public String newUser(Model model, Principal principal) {
+        User user = userService.getUserByUsername(principal.getName());
+        model.addAttribute("user", user);
+        model.addAttribute("roles", user.getRoles());
+        model.addAttribute("newUser", new User());
+        model.addAttribute("AllRoles", roleService.getRoles());
         return "admin/new";
     }
 
@@ -50,18 +60,18 @@ public class AdminController {
         userService.saveUser(user);
         return "redirect:admin/users";
     }
-    @DeleteMapping("/users/{id}")
+    @DeleteMapping("/users/delete/{id}")
     public String deleteUser(@PathVariable("id") long id) {
         userService.deleteUser(id);
         return "redirect:/admin/users";
     }
 
-    @GetMapping("users/{id}/edit")
-    public String getUpdateEventPage(Model model, @PathVariable("id") long id) {
-        model.addAttribute("user", userService.getUserById(id));
-        model.addAttribute("roles", roleService.getRoles());
-        return "/admin/edit";
-    }
+//    @GetMapping("users/{id}")
+//    public String getUpdateEventPage(Model model, @PathVariable("id") long id) {
+//        model.addAttribute("oneUser", userService.getUserById(id));
+//        model.addAttribute("roles", roleService.getRoles());
+//        return "/admin/users";
+//    }
 
     @PatchMapping("users/{id}")
     public String updateEvent(@ModelAttribute("user") @Valid User user,

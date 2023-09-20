@@ -61,6 +61,7 @@ public class UserServiceImpl implements UserService {
         User user = userDao.findById(id);
         user.setUsername(updatedUser.getUsername());
         user.setAge(updatedUser.getAge());
+        user.setLastname(updatedUser.getLastname());
         user.setEmail(updatedUser.getEmail());
         user.setRoles(updatedUser.getRoles());
         if (!user.getPassword().equals(updatedUser.getPassword())) {

@@ -6,7 +6,6 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -21,6 +20,10 @@ public class User implements UserDetails {
     @NotEmpty(message = "Username не должен быть пустым")
     private String username;
 
+    @Column(name = "lastname")
+    @Size(min = 5, message = "Минимальное название фамилии должно начинаться от 2 символов")
+    private String lastname;
+
     @Column(name = "age")
     @NotNull
     @Min(value = 1, message = "Возраст должен быть больше нуля")
@@ -30,6 +33,8 @@ public class User implements UserDetails {
     @Column(name = "email")
     @Size(min = 5, message = "Минимальное название почты должно начинаться от 5 символов")
     private String email;
+
+
 
     @Column(name = "password")
     @NotEmpty(message = "Пароль не должен быть пустым")
@@ -46,12 +51,20 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String username, int age, String email, String password, List<Role> roles) {
+    public User(String username, int age, String lastname, String password,String email, List<Role> roles) {
         this.username = username;
-        this.age = age;
         this.email = email;
+        this.age = age;
+        this.lastname = email;
         this.password = password;
         this.roles = roles;
+    }
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public long getId() {
@@ -79,12 +92,12 @@ public class User implements UserDetails {
         this.age = age;
     }
 
-    public String getEmail() {
-        return email;
+    public String getLastname() {
+        return lastname;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setLastname(String email) {
+        this.lastname = email;
     }
 
     @Override
@@ -115,7 +128,7 @@ public class User implements UserDetails {
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", age=" + age +
-                ", email='" + email + '\'' +
+                ", email='" + lastname + '\'' +
                 ", password='" + password + '\'' +
                 '}';
     }
