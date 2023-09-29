@@ -34,13 +34,11 @@ public class User implements UserDetails {
     @Size(min = 5, message = "Минимальное название почты должно начинаться от 5 символов")
     private String email;
 
-
-
     @Column(name = "password")
     @NotEmpty(message = "Пароль не должен быть пустым")
     private String password;
 
-
+    @NotNull
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn (name = "users_id"),

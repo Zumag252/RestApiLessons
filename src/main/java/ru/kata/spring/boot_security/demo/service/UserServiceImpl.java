@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
         List<Role> list = new ArrayList<>();
         for (Role role : roleList) {
             for (Role userRole : roles) {
-                if (role.getRole_name().equals(userRole.getRole_name())) {
+                if (role.getRoleName().equals(userRole.getRoleName())) {
                     list.add(role);
                 }
             }

@@ -24,7 +24,7 @@ public class RoleDaoImpl implements RoleDao {
 
     @Override
     public List<Role> getRoles() {
-        return entityManager.createQuery("from Role", Role.class)
+        return entityManager.createQuery("from Role r", Role.class)
                 .getResultStream().collect(Collectors.toList());
     }
 
@@ -40,7 +40,7 @@ public class RoleDaoImpl implements RoleDao {
     @Override
     public Role findByName(String roleName) {
         try {
-            return entityManager.createQuery("from Role where name=:roleName", Role.class).setParameter("roleName", roleName).getSingleResult();
+            return entityManager.createQuery("from Role where roleName=:roleName", Role.class).setParameter("roleName", roleName).getSingleResult();
         } catch (Exception e) {
             return null;
         }

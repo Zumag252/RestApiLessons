@@ -101,8 +101,8 @@
                     <label class="col-form-label fw-bold"><h6>Roles:</h6>
                         <input type="checkbox" name="roles"
                                th:each="role : ${AllRoles}"
-                               th:text="${role.getRole_name()}"
-                               th:value="${role.getRole_name()}"
+                               th:text="${role.getRoleName()}"
+                               th:value="${role.getRoleName()}"
                                th:field="*{roles}"
                         />
                     </label>

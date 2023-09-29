@@ -17,7 +17,7 @@ public class Role implements GrantedAuthority {
     private long id;
     @Column(name = "name", unique = true)
     @Size(min = 2, message = "Минимальное название роли должно содержать от 2 символов")
-    private String role_name;
+    private String roleName;
 
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private List<User> users;
@@ -26,7 +26,7 @@ public class Role implements GrantedAuthority {
     }
 
     public Role(String name) {
-        this.role_name = name;
+        this.roleName = name;
     }
 
     public long getId() {
@@ -37,12 +37,12 @@ public class Role implements GrantedAuthority {
         this.id = id;
     }
 
-    public String getRole_name() {
-        return role_name;
+    public String getRoleName() {
+        return roleName;
     }
 
-    public void setRole_name(String role_name) {
-        this.role_name = role_name;
+    public void setRoleName(String role_name) {
+        this.roleName = role_name;
     }
 
     public List<User> getUsers() {
@@ -55,11 +55,11 @@ public class Role implements GrantedAuthority {
 
     @Override
     public String toString() {
-        return role_name;
+        return roleName;
     }
 
     @Override
     public String getAuthority() {
-        return getRole_name();
+        return getRoleName();
     }
 }
