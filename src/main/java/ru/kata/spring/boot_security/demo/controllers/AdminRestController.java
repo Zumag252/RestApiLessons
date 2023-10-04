@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.dto.UserDTO;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
-
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -26,13 +26,13 @@ public class AdminRestController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<List<User>> getAllUsers() {
-        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
+    public List<User> getAllUsers() {
+        return userService.getAllUsers();
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<UserDTO> getUserByID (@PathVariable long id) {
-        return new ResponseEntity<>(convertToUserDTO(userService.getUserById(id)),HttpStatus.OK);
+    public UserDTO getUserByID (@PathVariable long id) {
+        return convertToUserDTO(userService.getUserById(id));
     }
 
     @PostMapping("/users")
@@ -50,16 +50,6 @@ public class AdminRestController {
         }
         return "User c ID " + id + " удален";
     }
-
-
-
-
-
-
-
-
-
-
 
 
 

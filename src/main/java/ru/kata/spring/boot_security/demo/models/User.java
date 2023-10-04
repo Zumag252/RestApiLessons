@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
@@ -110,6 +111,8 @@ public class User implements UserDetails {
     public List<Role> getRoles() {
         return this.roles;
     }
+
+
 
     public void setRoles(List<Role> roles) {
         this.roles = roles;
