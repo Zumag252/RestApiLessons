@@ -1,12 +1,9 @@
 package ru.kata.spring.boot_security.demo.dto;
 
 
+
 import ru.kata.spring.boot_security.demo.models.Role;
 
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.validation.constraints.*;
 import java.util.List;
 
@@ -30,15 +27,19 @@ public class UserDTO {
     @NotEmpty(message = "Пароль не должен быть пустым")
     private String password;
 
+    @NotEmpty(message = "Необходимо выбрать роль пользователя")
+    List<Role> roles;
+
     public UserDTO() {
     }
 
-    public UserDTO(String username, String lastname, int age, String email, String password) {
+    public UserDTO(String username, String lastname, int age, String email, String password, List<Role> roles) {
         this.username = username;
         this.lastname = lastname;
         this.age = age;
         this.email = email;
         this.password = password;
+        this.roles = roles;
     }
 
     public String getUsername() {
