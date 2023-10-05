@@ -53,6 +53,10 @@ public class UserDaoImpl implements UserDao {
                 .setParameter("userId", id)
                 .executeUpdate();
     }
+    @Override
+    public void updateUser(User user) {
+        entityManager.merge(user);
+    }
 }
 
 

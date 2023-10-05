@@ -5,10 +5,13 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.dto.UserDTO;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
+
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,8 +29,8 @@ public class AdminRestController {
     }
 
     @GetMapping("/users")
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    public List<UserDTO> getAllUsers() {
+        return userService.getAllUsers().stream().map(this::convertToUserDTO).collect(Collectors.toList());
     }
 
     @GetMapping("/users/{id}")
@@ -36,8 +39,15 @@ public class AdminRestController {
     }
 
     @PostMapping("/users")
-    public void createNewUser (@RequestBody User newUser) {
+    public ResponseEntity<HttpStatus> createNewUser (@RequestBody @Valid User newUser) {
         userService.saveUser(newUser);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @PutMapping("/users")
+    public ResponseEntity<HttpStatus> updateUser (@RequestBody User user) {
+        userService.updateUser(user);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @DeleteMapping("/users/{id}")

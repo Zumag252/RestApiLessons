@@ -74,13 +74,12 @@ public class AdminController {
 //    }
 
     @PatchMapping("users/{id}")
-    public String updateEvent(@ModelAttribute("user") @Valid User user,
-                              @PathVariable("id") long id,
-                              BindingResult result) {
+    public String updateEvent(Model model, @ModelAttribute("user") @Valid User user, BindingResult result) {
         if (result.hasErrors()) {
             return "/admin/edit";
         }
-        userService.updateUser(id, user);
+        model.addAttribute("roles", user.getRoles());
+        userService.updateUser(user);
         return "redirect:/admin/users";
     }
 }

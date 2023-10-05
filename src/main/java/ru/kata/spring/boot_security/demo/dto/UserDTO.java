@@ -28,9 +28,17 @@ public class UserDTO {
     private String password;
 
     @NotEmpty(message = "Необходимо выбрать роль пользователя")
-    List<Role> roles;
+    private List<Role> roles;
 
     public UserDTO() {
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 
     public UserDTO(String username, String lastname, int age, String email, String password, List<Role> roles) {
