@@ -28,13 +28,22 @@ public class AdminRestController {
     }
 
     @GetMapping("/users")
-    public List<UserDTO> getAllUsers() {
-        return userService.getAllUsers().stream().map(this::convertToUserDTO).collect(Collectors.toList());
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        try {
+            List<UserDTO> userDTOList = userService.getAllUsers().stream().map(this::convertToUserDTO).collect(Collectors.toList());
+            return new ResponseEntity<>(userDTOList, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/users/{id}")
-    public UserDTO getUserByID (@PathVariable long id) {
-        return convertToUserDTO(userService.getUserById(id));
+    public ResponseEntity<UserDTO> getUserByID (@PathVariable long id) {
+        try {
+            return new ResponseEntity<>(convertToUserDTO(userService.getUserById(id)), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @PostMapping("/users")
@@ -56,8 +65,8 @@ public class AdminRestController {
         }
         else {
         userService.deleteUser(id);
+            return "User c ID " + id + " удален";
         }
-        return "User c ID " + id + " удален";
     }
 
 
