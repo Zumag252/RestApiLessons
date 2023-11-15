@@ -1,10 +1,9 @@
-const URLUserPage = 'http://localhost:8080/api/user'
-
-const navbarBrandUser = document.getElementById('navbarBrandUser'); //Элемент, где будет роль и почта текущего юзера
-const tableUserUser = document.getElementById('tableUser');//Элемент, где будет таблица текущего юзера
+const URLNavbarUser = 'http://localhost:8080/api/user/currentUser/';
+const navbarBrandUser = document.getElementById('navbarBrandUser');
+const tableUserUser = document.getElementById('tableUser');
 
 function getCurrentUser() {
-    fetch(URLUserPage)
+    fetch(URLNavbarUser)
         .then((res) => res.json())
         .then((user) => {
 
