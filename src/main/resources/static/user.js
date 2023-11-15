@@ -1,9 +1,9 @@
-const URLNavbarUser = 'http://localhost:8080/api/user/currentUser/';
-const navbarBrandUser = document.getElementById('navbarBrandUser');
-const tableUserUser = document.getElementById('tableUser');
+const URL = 'http://localhost:8080/api/user/currentUser/';
+const navbarUser = document.getElementById('navbarBrandUser');
+const tableUser = document.getElementById('tableUser');
 
 function getCurrentUser() {
-    fetch(URLNavbarUser)
+    fetch(URL)
         .then((res) => res.json())
         .then((user) => {
 
@@ -18,8 +18,8 @@ function getCurrentUser() {
             <td>${user.email}</td>
             <td>${rolesStringUser}</td>
             </tr>`;
-            tableUserUser.innerHTML = dataOfUser;
-            navbarBrandUser.innerHTML = `<b><span>${user.email}</span></b>
+            tableUser.innerHTML = dataOfUser;
+            navbarUser.innerHTML = `<b><span>${user.email}</span></b>
                              <span>with roles:</span>
                              <span>${rolesStringUser}</span>`;
         });

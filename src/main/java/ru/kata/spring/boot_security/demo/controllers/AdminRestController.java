@@ -1,81 +1,75 @@
 package ru.kata.spring.boot_security.demo.controllers;
 
 
-import org.modelmapper.ModelMapper;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.kata.spring.boot_security.demo.dto.UserDTO;
+import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
+import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
-
 import javax.validation.Valid;
+import java.security.Principal;
+import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/admin")
 public class AdminRestController {
     private final UserService userService;
-    private final ModelMapper modelMapper;
+    private final RoleService roleService;
 
     @Autowired
-    public AdminRestController(UserService userService, ModelMapper modelMapper) {
+    public AdminRestController(UserService userService, RoleService roleService) {
         this.userService = userService;
-        this.modelMapper = modelMapper;
+        this.roleService = roleService;
+    }
+
+    @GetMapping("/showAccount")
+    public ResponseEntity<User> showInfoUser(Principal principal) {
+        return ResponseEntity.ok(userService.getUserByUsername(principal.getName()));
     }
 
     @GetMapping("/users")
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
-        try {
-            List<UserDTO> userDTOList = userService.getAllUsers().stream().map(this::convertToUserDTO).collect(Collectors.toList());
-            return new ResponseEntity<>(userDTOList, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<List<User>> getAllUsers() {
+        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
+    }
+    @GetMapping(value = "/roles")
+    public ResponseEntity<Collection<Role>> getAllRoles() {
+        return new ResponseEntity<>(roleService.getRoles(), HttpStatus.OK);
+    }
+
+    @GetMapping("/roles/{id}")
+    public ResponseEntity<Collection<Role>> getRole(@PathVariable("id") Long id) {
+        return new ResponseEntity<>(userService.getUserById(id).getRoles(), HttpStatus.OK);
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<UserDTO> getUserByID (@PathVariable long id) {
-        try {
-            return new ResponseEntity<>(convertToUserDTO(userService.getUserById(id)), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<User> getUserById(@PathVariable("id") Long id) {
+        User user = userService.getUserById(id);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PostMapping("/users")
-    public ResponseEntity<HttpStatus> createNewUser (@RequestBody @Valid User newUser) {
+    public ResponseEntity<User> addNewUser(@RequestBody @Valid User newUser) {
         userService.saveUser(newUser);
-        return ResponseEntity.ok(HttpStatus.OK);
+        return new ResponseEntity<>(newUser, HttpStatus.OK);
     }
 
-    @PutMapping("/users")
-    public ResponseEntity<HttpStatus> updateUser (@RequestBody User user) {
-        userService.updateUser(user);
-        return ResponseEntity.ok(HttpStatus.OK);
+    @PatchMapping("/users/{id}")
+    public ResponseEntity<User> updateUser(@RequestBody User userFromWebPage, @PathVariable("id") Long id) {
+        userService.updateUser(userFromWebPage);
+        return new ResponseEntity<>(userFromWebPage, HttpStatus.OK);
     }
-
     @DeleteMapping("/users/{id}")
-    public String deleteUserByID(@PathVariable long id) {
-        if(userService.getUserById(id) == null) {
-            throw new NullPointerException("User с таким ID не существует");
-        }
-        else {
+    public ResponseEntity<HttpStatus> deleteUser(@PathVariable("id") Long id) {
+        User user = userService.getUserById(id);
         userService.deleteUser(id);
-            return "User c ID " + id + " удален";
-        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-
-
-    private User convertToUser(UserDTO userDTO) {
-        return modelMapper.map(userDTO, User.class);
-    }
-
-    private UserDTO convertToUserDTO(User user) {
-        return modelMapper.map(user, UserDTO.class);
-    }
 }
