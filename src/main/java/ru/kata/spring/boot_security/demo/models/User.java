@@ -7,7 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Entity
 @Table(name = "users")
