@@ -1,39 +1,39 @@
 package ru.kata.spring.boot_security.demo.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.dao.RoleDao;
-import ru.kata.spring.boot_security.demo.models.Role;
+import ru.kata.spring.boot_security.demo.model.Role;
+
+import javax.transaction.Transactional;
 import java.util.List;
 
-
-
-
 @Service
-@Transactional(readOnly = true)
 public class RoleServiceImpl implements RoleService {
-   private final RoleDao roleDao;
-   @Autowired
+
+    private final RoleDao roleDao;
+
     public RoleServiceImpl(RoleDao roleDao) {
         this.roleDao = roleDao;
     }
 
-    @Transactional
-    public void saveRole(List<Role> role) {
-        roleDao.saveRole(role);
-    }
-
-    public List<Role> getRoles() {
-        return roleDao.getRoles();
-    }
-
-    public void deleteRole(Long id) {
-       roleDao.deleteRole(id);
+    @Override
+    public List<Role> getAllRoles() {
+        return roleDao.getAllRoles();
     }
 
     @Override
-    public Role findByName(String roleName) {
-        return roleDao.findByName(roleName);
+    public Role getRole(String username) {
+        return roleDao.getRole(username);
+    }
+
+    @Override
+    public Role getRoleById(Long id) {
+        return roleDao.getRoleById(id);
+    }
+
+    @Override
+    @Transactional
+    public void addRole(Role role) {
+        roleDao.addRole(role);
     }
 }

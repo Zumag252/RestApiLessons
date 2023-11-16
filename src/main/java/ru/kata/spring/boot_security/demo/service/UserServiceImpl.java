@@ -1,77 +1,87 @@
 package ru.kata.spring.boot_security.demo.service;
 
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import ru.kata.spring.boot_security.demo.dao.RoleDao;
 import ru.kata.spring.boot_security.demo.dao.UserDao;
-import ru.kata.spring.boot_security.demo.models.Role;
-import ru.kata.spring.boot_security.demo.models.User;
-import java.util.ArrayList;
-import java.util.Collection;
+import ru.kata.spring.boot_security.demo.model.User;
+
+import javax.transaction.Transactional;
 import java.util.List;
 
-
 @Service
-@Transactional(readOnly = true)
-public class UserServiceImpl implements UserService {
-    private final UserDao userDao;
-    private final RoleService roleService;
-    private final PasswordEncoder encoder;
+public class UserServiceImpl implements UserService, UserDetailsService {
 
-    @Autowired
-    public UserServiceImpl(UserDao userDao, RoleService roleService, PasswordEncoder encoder) {
+    private final UserDao userDao;
+
+    private final RoleDao roleDao;
+
+    public UserServiceImpl(UserDao userDao, RoleDao roleDao) {
         this.userDao = userDao;
-        this.roleService = roleService;
-        this.encoder = encoder;
+        this.roleDao = roleDao;
+    }
+
+
+    @Override
+    @Transactional
+    public void addUser(User user) {
+        userDao.addUser(user);
     }
 
     @Override
-    public List<User> getAllUsers() {
-        return userDao.findAll();
+    public User getById(Long id) {
+        return userDao.getById(id);
+    }
+
+    @Override
+    public List<User> getAllUser() {
+        return userDao.getAllUser();
     }
 
     @Override
     @Transactional
-    public void saveUser(User user) {
-        user.setPassword(encoder.encode(user.getPassword()));
-        userDao.save(settingRoles(user));
+    public void updateUser(Long id, User user) {
+        User us = userDao.getById(id);
+        if (user.getPassword() != null) {
+            user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+        }
+        us.setName(user.getName());
+        us.setSecondName(user.getSecondName());
+        us.setEmail(user.getEmail());
+
+
+
+        userDao.updateUser(user);
     }
 
     @Override
-    public User getUserById(Long id) {
-        return userDao.findById(id);
+    @Transactional
+    public void deleteUser(Long id) {
+        userDao.deleteUser(id);
+    }
+
+    @Override
+    @Transactional
+    public void deleteUser(User user) {
+        userDao.deleteUser(user);
+    }
+
+    @Override
+    public List<User> findUser(User user) {
+        return userDao.findUser(user);
     }
 
     @Override
     public User getUserByUsername(String username) {
-        return userDao.findByUsername(username);
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void deleteUser(Long id) {
-        userDao.deleteById(id);
+        return userDao.getUserByUsername(username);
     }
 
     @Override
     @Transactional
-    public void updateUser(User user) {
-        userDao.updateUser(settingRoles(user));
-    }
-    private User settingRoles(User user) {
-        List<Role> roles = user.getRoles();
-        Collection<Role> roleList = roleService.getRoles();
-        List<Role> list = new ArrayList<>();
-        for (Role role : roleList) {
-            for (Role userRole : roles) {
-                if (role.getRoleName().equals(userRole.getRoleName())) {
-                    list.add(role);
-                }
-            }
-        }
-        user.setRoles(list);
-        return user;
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userDao.getUserByUsername(username);
     }
 }

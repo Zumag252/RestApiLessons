@@ -1,48 +1,39 @@
 package ru.kata.spring.boot_security.demo.dao;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import ru.kata.spring.boot_security.demo.models.Role;
+import ru.kata.spring.boot_security.demo.model.Role;
+
 import javax.persistence.EntityManager;
-import java.util.Collection;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Repository
 public class RoleDaoImpl implements RoleDao {
+
     private final EntityManager entityManager;
-    @Autowired
+
     public RoleDaoImpl(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
     @Override
-    public void saveRole(List<Role> role) {
+    public List<Role> getAllRoles() {
+        return entityManager.createQuery("Select role From Role role").getResultList();
+    }
+
+    @Override
+    public Role getRole(String username) {
+        return entityManager.createQuery("select role from Role role where role.role =: role", Role.class)
+                .setParameter("role", username).getSingleResult();
+    }
+
+    @Override
+    public Role getRoleById(Long id) {
+        return (Role) entityManager.createQuery("select role from Role role where role.id =: id")
+                .setParameter("id", id).getSingleResult();
+    }
+
+    @Override
+    public void addRole(Role role) {
         entityManager.persist(role);
-    }
-
-    @Override
-    public List<Role> getRoles() {
-        return entityManager.createQuery("from Role r", Role.class)
-                .getResultStream().collect(Collectors.toList());
-    }
-
-    @Override
-    public void deleteRole(Long id) {
-        Role role = entityManager.find(Role.class, id);
-        if (role == null) {
-            throw new NullPointerException("Роль с таким id не найдена");
-        }
-        entityManager.remove(role);
-    }
-
-    @Override
-    public Role findByName(String roleName) {
-        try {
-            return entityManager.createQuery("from Role where roleName=:roleName", Role.class).setParameter("roleName", roleName).getSingleResult();
-        } catch (Exception e) {
-            return null;
-        }
     }
 }

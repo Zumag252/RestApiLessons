@@ -1,37 +1,23 @@
-const URL = 'http://localhost:8080/api/user/currentUser/';
-const navbarUser = document.getElementById('navbarBrandUser');
-const tableUser = document.getElementById('tableUser');
+const userUrl = 'http://localhost:8080/api/currentUser';
 
-function getCurrentUser() {
-    fetch(URL)
-        .then((res) => res.json())
-        .then((user) => {
 
-            let rolesStringUser = rolesToStringForUser(user.roles);
-            let dataOfUser = '';
-
-            dataOfUser += `<tr>
-            <td>${user.id}</td>
-            <td>${user.username}</td>
-            <td>${user.lastname}</td>
-            <td>${user.age}</td>
-            <td>${user.email}</td>
-            <td>${rolesStringUser}</td>
-            </tr>`;
-            tableUser.innerHTML = dataOfUser;
-            navbarUser.innerHTML = `<b><span>${user.email}</span></b>
-                             <span>with roles:</span>
-                             <span>${rolesStringUser}</span>`;
-        });
+function getUserPage() {
+    fetch(userUrl).then(response => response.json()).then(user =>
+        getInformationAboutUser(user))
 }
 
-getCurrentUser()
+function getInformationAboutUser(user) {
 
-function rolesToStringForUser(roles) {
-    let rolesString = '';
-    for (let element of roles) {
-        rolesString += (element.name.toString().replace('ROLE_', '') + ', ');
-    }
-    rolesString = rolesString.substring(0, rolesString.length - 2);
-    return rolesString;
+    let result = '';
+    result =
+        `<tr>
+    <td>${user.id}</td>
+    <td>${user.name}</td>
+    <td>${user.lastName}</td>
+    <td>${user.userName}</td>
+    <td id=${'role' + user.id}>${user.role.map(r => r.role).join(' ')}</td>
+</tr>`
+    document.getElementById('userTableBody').innerHTML = result;
 }
+
+getUserPage();

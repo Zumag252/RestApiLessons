@@ -1,74 +1,66 @@
 package ru.kata.spring.boot_security.demo.dao;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import ru.kata.spring.boot_security.demo.models.User;
+import ru.kata.spring.boot_security.demo.model.User;
+
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import java.util.List;
-
-
 
 @Repository
 public class UserDaoImpl implements UserDao {
-    @PersistenceContext
+
     private final EntityManager entityManager;
 
-
-    @Autowired
     public UserDaoImpl(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
     @Override
-    public List<User> findAll() {
-        return entityManager.createQuery("FROM User u", User.class).getResultList();
+    public void addUser(User user) {
+        entityManager.merge(user);
     }
 
     @Override
-    public void save(User user) {
-        entityManager.persist(user);
+    public void deleteUser(Long id) {
+        entityManager.createQuery("delete User where id =: id").setParameter("id", id).executeUpdate();
     }
 
     @Override
-    public User findById(Long id) {
-        return entityManager.find(User.class, id);
-    }
-
-    public User findByUsername(String username) {
-        return entityManager
-                .createQuery(
-                        "SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.username=:username", User.class
-                )
-                .setParameter("username", username)
-                .getResultList()
-                .stream().findFirst().orElse(null);
+    public void deleteUser(User user) {
+        entityManager.joinTransaction();
+        findUser(user).forEach(x -> entityManager.remove(x.getId()));
     }
 
     @Override
-    public void deleteById(Long id) {
-        entityManager.find(User.class, id).getRoles().clear();
-        entityManager
-                .createQuery("DELETE FROM User WHERE id =:userId")
-                .setParameter("userId", id)
-                .executeUpdate();
+    public List<User> findUser(User user) {
+        TypedQuery<User> uQuery = entityManager.createQuery("from User where email =: email", User.class)
+                .setParameter("email", user.getEmail());
+        return uQuery.getResultList();
     }
+
+    @Override
+    public User getUserByUsername(String username) {
+        return entityManager.createQuery("from User where email =: username", User.class)
+                .setParameter("username", username).getSingleResult();
+    }
+
+    @Override
+    public List<User> getAllUser() {
+        TypedQuery<User> typedQuery = entityManager.createQuery("FROM User", User.class);
+        return typedQuery.getResultList();
+    }
+
     @Override
     public void updateUser(User user) {
         entityManager.merge(user);
+
+    }
+
+    @Override
+    public User getById(Long id) {
+        TypedQuery<User> typedQuery = entityManager.createQuery("from User where id =: id", User.class)
+                .setParameter("id", id);
+        return typedQuery.getSingleResult();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
