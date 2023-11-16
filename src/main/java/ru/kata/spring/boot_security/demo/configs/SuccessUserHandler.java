@@ -10,16 +10,21 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Set;
 
+/**
+ * Внутри Authentication authentication содержатся Credentials, т.е. логин и пароль, введенные с формы
+ **/
+
 @Component
 public class SuccessUserHandler implements AuthenticationSuccessHandler {
-    // Spring Security использует объект Authentication, пользователя авторизованной сессии.
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException {
-        Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
+    public void onAuthenticationSuccess(HttpServletRequest httpServletRequest,
+                                        HttpServletResponse httpServletResponse,
+                                        Authentication authentication) throws IOException {
+        Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());//Получили список ролей юзера
         if (roles.contains("ROLE_ADMIN")) {
             httpServletResponse.sendRedirect("/admin");
         } else if (roles.contains("ROLE_USER")) {
-            httpServletResponse.sendRedirect("/currentUser");
+            httpServletResponse.sendRedirect("/user");
         } else {
             httpServletResponse.sendRedirect("/login");
         }
