@@ -12,15 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.dao.UserDao;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * @author Alfazard on 10.08.2023
- */
+
 @Service("userService")
 public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserDao userDao;
