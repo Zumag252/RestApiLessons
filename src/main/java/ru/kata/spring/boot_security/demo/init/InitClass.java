@@ -24,11 +24,9 @@ public class InitClass {
         Set<Role> roleAdmin = Set.of(new Role("ROLE_ADMIN"));
         Set<Role> roleUser = Set.of(new Role("ROLE_USER"));
 
-        User admin = new User("admin", "adminov",
-                44, "admin@mail.ru", "admin", roleAdmin);
-        User user = new User("user", "userov",
-                35, "user@mail.ru", "user", roleUser);
-        User user1 = new User("max","zhuravlev", 35,"max@mail.ru","max", roleUser);
+        User admin = new User("admin", "adminov",44, "admin@mail.ru", "admin", roleAdmin);
+        User user = new User("user", "userov",35, "user@mail.ru", "user", roleUser);
+        User user1 = new User("max","zhuravlev",35,"max@mail.ru","max", roleUser);
         userService.saveUser(admin);
         userService.saveUser(user);
         userService.saveUser(user1);
