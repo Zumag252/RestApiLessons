@@ -1,9 +1,9 @@
 const data = document.getElementById("userTable");
-const url = 'http://localhost:8080/admin/showAdmin';
+const urlAdmin = 'http://localhost:8080/admin/showAdmin';
 const topPanel = document.getElementById("adminHeader");
 
 function userAuthInfo() {
-    fetch(url)
+    fetch(urlAdmin)
         .then((res) => res.json())
         .then((user) => {
 
