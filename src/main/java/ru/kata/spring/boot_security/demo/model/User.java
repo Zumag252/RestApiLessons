@@ -3,7 +3,6 @@ package ru.kata.spring.boot_security.demo.model;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,33 +14,41 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.*;
 import java.util.Collection;
 import java.util.Set;
 
-/**
- * @author Alfazard on 08.07.2023
- */
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
     @Column(name = "first_name")
+    @Size(min = 2, message = "Минимальное значение имени должно начинаться от 2 символов")
+    @NotEmpty(message = "Имя не должно быть пустым")
     private String firstName;
     @Column(name = "last_name")
+    @Size(min = 2, message = "Минимальное название фамилии должно начинаться от 2 символов")
+    @NotEmpty(message = "Фамилия не должна быть пустой")
     private String lastName;
+    @Column(name = "age")
+    @Min(value = 1, message = "Возраст должен быть больше нуля")
+    @Max(value = 120, message = "Возраст не может быть больше 120")
     private Integer age;
-    @Column(nullable = false, unique = true)
+    @Column(name = "email", nullable = false, unique = true)
+    @Size(min = 5, message = "Минимальное название почты должно начинаться от 5 символов")
+    @Email
     private String email;
+    @Column(name = "password")
+    @NotEmpty(message = "Пароль не должен быть пустым")
     private String password;
 
     @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    @NotEmpty(message = "Specify role")
     private Set<Role> roles;
 
     public User() {
