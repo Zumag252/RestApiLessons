@@ -7,9 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
-/**
- * @author Alfazard on 08.07.2023
- */
+
 @Repository
 public class UserDaoImpl implements UserDao {
     @PersistenceContext(unitName = "entityManagerFactory")

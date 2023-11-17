@@ -29,15 +29,13 @@ public class WebSecurityConfig {
                         .regexMatchers("/user/*").hasAnyRole("USER", "ADMIN")
                         .regexMatchers("/admin/*").hasRole("ADMIN")
                         .anyRequest().authenticated()
-                )
-                .formLogin((form) -> form
+                ).formLogin((form) -> form
                         .successHandler(successUserHandler)
                         .loginPage("/")
                         .loginProcessingUrl("/login")
                         .usernameParameter("Email address")
                         .passwordParameter("Password")
-                )
-                .logout((logout) -> logout
+                ).logout((logout) -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/")
                 );
