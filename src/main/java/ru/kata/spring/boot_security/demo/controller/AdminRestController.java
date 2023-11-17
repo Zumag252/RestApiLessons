@@ -12,13 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
-
 import java.security.Principal;
 import java.util.List;
 
-/**
- * @author Alfazard on 12.09.2023
- */
+
 @RestController
 @RequestMapping("/admin")
 public class AdminRestController {

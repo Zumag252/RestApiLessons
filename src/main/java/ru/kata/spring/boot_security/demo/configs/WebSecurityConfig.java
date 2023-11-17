@@ -28,17 +28,16 @@ public class WebSecurityConfig {
                         .regexMatchers("/login", "/").permitAll()
                         .regexMatchers("/user/*").hasAnyRole("USER", "ADMIN")
                         .regexMatchers("/admin/*").hasRole("ADMIN")
-                        .anyRequest().authenticated()
-                ).formLogin((form) -> form
+                        .anyRequest().authenticated()).
+                        formLogin((form) -> form
                         .successHandler(successUserHandler)
                         .loginPage("/")
                         .loginProcessingUrl("/login")
                         .usernameParameter("Email address")
-                        .passwordParameter("Password")
-                ).logout((logout) -> logout
+                        .passwordParameter("Password"))
+                        .logout((logout) -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/")
-                );
+                        .logoutSuccessUrl("/"));
         return http.build();
     }
 
