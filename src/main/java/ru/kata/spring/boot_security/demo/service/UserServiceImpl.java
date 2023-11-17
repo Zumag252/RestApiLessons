@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-@Service("userService")
+@Service
 public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserDao userDao;
     private final RoleService roleService;

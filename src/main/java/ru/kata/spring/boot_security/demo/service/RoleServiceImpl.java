@@ -19,7 +19,7 @@ public class RoleServiceImpl implements RoleService{
     }
 
     @PostConstruct
-    @Transactional(rollbackFor=Exception.class)
+    @Transactional
     public void init() {
         roleDao.save(new Role("ROLE_USER"));
         roleDao.save(new Role("ROLE_ADMIN"));
