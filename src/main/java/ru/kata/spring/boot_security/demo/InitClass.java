@@ -1,4 +1,4 @@
-package ru.kata.spring.boot_security.demo.init;
+package ru.kata.spring.boot_security.demo;
 
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
