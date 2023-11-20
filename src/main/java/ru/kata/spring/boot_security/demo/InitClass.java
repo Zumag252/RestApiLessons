@@ -18,6 +18,7 @@ public class InitClass {
         this.userService = userService;
     }
 
+
     @PostConstruct
     @Transactional
     public void postConstruct() {
@@ -27,6 +28,7 @@ public class InitClass {
         User admin = new User("admin", "adminov",44, "admin@mail.ru", "admin", roleAdmin);
         User user = new User("user", "userov",35, "user@mail.ru", "user", roleUser);
         User user1 = new User("max","zhuravlev",35,"max@mail.ru","max", roleUser);
+        User user2 = new User("anna","grigoryan",30,"anna@mail.ru","anna", roleUser);
         userService.saveUser(admin);
         userService.saveUser(user);
         userService.saveUser(user1);
