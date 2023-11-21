@@ -18,10 +18,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin")
-public class AdminRestController {
+public class UsersRestController {
     private final UserService userService;
 
-    public AdminRestController(UserService userService) {
+    public UsersRestController(UserService userService) {
         this.userService = userService;
     }
 
@@ -43,7 +43,7 @@ public class AdminRestController {
     @PostMapping("/users")
     public ResponseEntity<HttpStatus> addNewUser(@RequestBody User user) {
         userService.saveUser(user);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping("/users")

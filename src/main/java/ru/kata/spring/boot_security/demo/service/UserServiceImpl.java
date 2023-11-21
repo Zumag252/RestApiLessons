@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.DAO.UserDao;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -46,11 +47,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Transactional(rollbackFor = Exception.class)
     public void updateUser(User user) {
         User editUser = userDao.findByEmail(user.getEmail());
-        if (!editUser.getPassword().equals(user.getPassword())) {
-            editUser.setPassword(encoder.encode(user.getPassword()));
-        }
-        if (user.getRoles() == null) {
-            user.setRoles(editUser.getRoles());
+        if (editUser.getId().equals(user.getId())) {
+            if (!editUser.getPassword().equals(user.getPassword())) {
+                editUser.setPassword(encoder.encode(user.getPassword()));
+            }
+            if (user.getRoles() == null) {
+                user.setRoles(editUser.getRoles());
+            }
+        } else {
+            user.setId(editUser.getId());
         }
         userDao.save(settingRoles(user));
     }
@@ -66,6 +71,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         userDao.deleteById(id);
     }
 
+    @Override
     public User findByEmail(String email) {
         return userDao.findByEmail(email);
     }
