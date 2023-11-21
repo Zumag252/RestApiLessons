@@ -47,16 +47,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Transactional(rollbackFor = Exception.class)
     public void updateUser(User user) {
         User editUser = userDao.findByEmail(user.getEmail());
-        if (editUser.getId().equals(user.getId())) {
+            if (!editUser.getId().equals(user.getId())) {
+                user.setId(editUser.getId());
+            }
             if (!editUser.getPassword().equals(user.getPassword())) {
                 editUser.setPassword(encoder.encode(user.getPassword()));
             }
             if (user.getRoles() == null) {
                 user.setRoles(editUser.getRoles());
             }
-        } else {
-            user.setId(editUser.getId());
-        }
         userDao.save(settingRoles(user));
     }
 
